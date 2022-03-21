@@ -7,7 +7,7 @@ int main()
     printf("------------------------\n");
     printf("1. 创建链表.            \n");
     printf("2. 打印链表.            \n");
-    printf("3. 销毁链表并退出.      \n");
+    printf("3. 销毁链表.            \n");
     printf("4. 插入元素.            \n");
     printf("5. 删除结点.            \n");
     printf("6. 查找元素.            \n");
@@ -15,34 +15,31 @@ int main()
     printf("8. 判断函数是否成环.    \n");
     printf("9. 打印链表中点元素.    \n");
     printf("10.积偶调换.            \n");
+    printf("11.将链表回环           \n");
+    printf("12.退出                 \n");
     printf("------------------------\n");
+    printf("请输入序号:");
 	//flag用来判断是否有链表 
 	//r表示return值 
 	int num, flag = 0, r;
 	LinkedList L = NULL;
 	while(1){
-		printf("请输入选项序号:");
-		r = scanf("%d",&num);
-		if(r == 0){
-			printf("非法输入\n");
-			break;
-		}
-		switch(num)
+		switch(GetNumber())
 		{
 			case 1 :
 				if(InitList(&L)){
 					flag = 1;
 					int i,NodeNum;
 					printf("请输入你要构建的结点数:");
-					scanf("%d",&NodeNum);
+					NodeNum = GetNumber();
 					LNode *Rear = L;
 					LNode *temp;
 					ElemType e;
 					//构建链表
 					for(i=1;i<=NodeNum;i++){
 						printf("请输入第%d个节点的数据:",i);
-						scanf("%d",&e);//printf("%d",e);
-						temp =(LNode*)malloc(sizeof(struct LNode));
+						e = GetNumber();//printf("%d",e);
+						temp = (LNode*)malloc(sizeof(struct LNode));
 						temp->data = e;//printf("%d",e);
 						temp->next = NULL;
 						Rear->next = temp;
@@ -65,22 +62,26 @@ int main()
 				} 	
 				else
 					printf("不存在链表,无法操作\n");
-				/*由于我在销毁链表后进行其他操作时 
-				出现了未知错误,所以设置了一个销毁后退出*/
-				exit(0);
+				break;
 			//与设想中插入的位置有所出入 
 			case 4 :
 				if(flag){
-				int i;
+				int i, num;
 				LNode *Rear = L;
 				LNode *temp = (LNode*)malloc(sizeof(struct LNode));
 				printf("请输入你想插入的元素:"); 
-				scanf("%d",&temp->data);
+				temp->data = GetNumber();
 				printf("请输入你要插入到的位置:");
-				scanf("%d",&i);
+				num = GetNumber();
 				//找到这个位置 
-				while(i--) Rear = Rear->next;
-				if(InsertList(Rear,temp))
+				for(i=1; i<num; i++){
+					if(Rear == NULL){
+						printf("所输入删除位置不存在\n");
+						break;
+					}
+					Rear = Rear->next;
+				}
+				if(Rear && InsertList(Rear,temp))
 					printf("插入成功\n");
 				}
 				else
@@ -89,15 +90,27 @@ int main()
 			/*也是有些出入,不过这个符合了函数要求*/
 			case 5 :
 				if(flag){
-					int i;
+					int i, num;
 					ElemType e;
 					LNode *Rear = L;
 					printf("请输入你想删除的结点位置:");
-					scanf("%d",&i);
-					while(i--) Rear = Rear->next;
-					/*为啥要把值分配给e*/
-					if(DeleteList(Rear, &e))
-						printf("删除成功\n");	
+					if(Rear->next == NULL){
+						printf("\n链表为空无法进行删除操作\n"); 
+					}
+					else{
+						num = GetNumber();
+						for(i=1; i<num; i++){
+							if(Rear == NULL){
+								printf("所输入删除位置不存在\n");
+								break;
+							}
+							Rear = Rear->next;
+						}
+						/*为啥要把值分配给e*/
+						if(Rear && DeleteList(Rear, &e))
+							printf("删除成功\n");
+						if(Rear) printf("删除的结点元素为%d\n",e);
+					}
 				}
 				else
 					printf("不存在链表,无法操作\n");
@@ -106,8 +119,8 @@ int main()
 			case 6 :
 				if(flag){
 					int e;
-					printf("输入你想找到的元素");
-					scanf("%d",&e);
+					printf("输入你想找到的元素:");
+					e = GetNumber();
 					SearchList(L, e);
 				}
 				else
@@ -129,7 +142,7 @@ int main()
 				}
 				else
 					printf("不存在链表,无法操作\n");
-				printf("特别说明:在这个程序中并没有想到设置回环函数,\n所以不管怎么调用函数都应该是显示不成环\n"); 
+				//printf("特别说明:在这个程序中并没有想到设置回环函数,\n所以不管怎么调用函数都应该是显示不成环\n");
 				break;
 			/*若是偶数个结点,则得到的是偏右边的元素*/
 			case 9 :
@@ -150,9 +163,20 @@ int main()
 				else
 					printf("不存在链表,无法操作\n");
 				break;
+			case 11:
+				if(flag){
+					if(LoopList(L))
+						printf("操作成功\n");
+				}
+				else
+					printf("不存在链表,无法操作\n");
+				break;
+			case 12 :
+				printf("你已退出");
+				exit(0);
 			default :
 				printf("输入有误,请重新输入\n");
-				break; 
+				break;
 		}
 	}
 	return 0;
