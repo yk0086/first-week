@@ -137,6 +137,12 @@ LNode* ReverseEvenList(LinkedList *L);
  */
 LNode* FindMidNode(LinkedList *L);
 
+void visit(ElemType e);
+
+int GetNumber();
+
+Status LoopList(LinkedList L);
+
  /**************************************************************
 *	End-Multi-Include-Prevent Section
 **************************************************************/

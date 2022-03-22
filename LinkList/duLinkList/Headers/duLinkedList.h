@@ -102,6 +102,9 @@ Status DeleteList_DuL(DuLNode *p, ElemType *e);
  */
 void TraverseList_DuL(DuLinkedList L, void (*visit)(ElemType e));
 
+int visit(ElemType e);
+
+int GetNumber();
 
  /**************************************************************
 *	End-Multi-Include-Prevent Section
